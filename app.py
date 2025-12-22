@@ -1,7 +1,7 @@
 # app.py
 import streamlit as st
 
-# 1. Configuración de la Página (Pestaña del navegador)
+# 1. Configuración de la Página
 st.set_page_config(
     page_title="Pukamani - Sistema Minero", 
     page_icon="⛰️", 
@@ -9,8 +9,10 @@ st.set_page_config(
 )
 
 # Importamos los módulos
+# NOTA: Esto fallará si auth.py no tiene la función show_login_screen
 from modules.auth import show_login_screen, check_admin_exists, show_users_manager
 from modules.dashboard import show_dashboard
+
 try:
     from modules.maestros import show_maestros
 except ImportError:
@@ -25,16 +27,14 @@ def main():
         st.session_state['authenticated'] = False
         
     # --- LOGICA DE NAVEGACIÓN ---
-    
     if not st.session_state['authenticated']:
         # CASO A: NO ESTÁ LOGUEADO -> Muestra Login
-        # (Aquí es donde auth.py pondrá el título "Pukamani")
         show_login_screen()
         
     else:
         # CASO B: YA ENTRÓ AL SISTEMA -> Muestra Menú Lateral
         with st.sidebar:
-            st.image("https://cdn-icons-png.flaticon.com/512/1048/1048950.png", width=100) # Icono minero opcional
+            st.image("https://cdn-icons-png.flaticon.com/512/1048/1048950.png", width=100)
             st.title(f"Hola, {st.session_state.get('usuario', 'Minero')}")
             st.write(f"Rol: **{st.session_state.get('rol', 'N/A')}**")
             st.divider()
