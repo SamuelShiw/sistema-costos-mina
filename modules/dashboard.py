@@ -7,7 +7,7 @@ from database import run_query
 from exportacion import generar_excel_corporativo
 
 def show_dashboard():
-    st.title("📊 Tablero de Comando")
+    st.title("🏔️ Pukamani - Control de Costos")
     
     # Obtener Dolar
     res = run_query("SELECT valor FROM configuracion WHERE clave='DOLAR_CAMBIO'")

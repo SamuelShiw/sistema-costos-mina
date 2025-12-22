@@ -19,7 +19,7 @@ def login_user(user, password):
     return None
 
 def show_users_manager():
-    st.title("👥 Gestión de Usuarios")
+    st.title("🔐 Acceso al Sistema Pukamani")
     
     with st.form("new_u"):
         u = st.text_input("Usuario (Login)")

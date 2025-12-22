@@ -6,7 +6,7 @@ from modules.dashboard import show_dashboard
 from modules.maestros import show_maestros
 
 # Configuración Inicial
-st.set_page_config(page_title="MineCost v10.1", page_icon="⛏️", layout="wide")
+st.set_page_config(page_title="Pukamani - Costos", page_icon="🏔️", layout="wide")
 
 # Inicializar Sesión
 if 'usuario' not in st.session_state: st.session_state.update({'usuario': None, 'rol': None, 'nombre': None})
