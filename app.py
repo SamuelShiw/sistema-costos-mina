@@ -1,71 +1,67 @@
 # app.py
 import streamlit as st
-from auth import login_user, check_admin_exists, show_users_manager
-from modules.registro import show_registro
+
+# 1. Configuración de la Página (Pestaña del navegador)
+st.set_page_config(
+    page_title="Pukamani - Sistema Minero", 
+    page_icon="⛰️", 
+    layout="wide"
+)
+
+# Importamos los módulos
+from modules.auth import show_login_screen, check_admin_exists, show_users_manager
 from modules.dashboard import show_dashboard
-from modules.maestros import show_maestros
+try:
+    from modules.maestros import show_maestros
+except ImportError:
+    pass
 
-# Configuración Inicial
-st.set_page_config(page_title="Pukamani - Costos", page_icon="🏔️", layout="wide")
-
-# Inicializar Sesión
-if 'usuario' not in st.session_state: st.session_state.update({'usuario': None, 'rol': None, 'nombre': None})
-
-# Verificar Admin al inicio
-try: check_admin_exists()
-except: pass
-
-def logout():
-    st.session_state.update({'usuario': None, 'rol': None, 'nombre': None})
-    st.rerun()
-
-# --- LÓGICA DE NAVEGACIÓN ---
-if st.session_state['usuario'] is None:
-    # PANTALLA DE LOGIN
-    c1, c2, c3 = st.columns([1,2,1])
-    with c2:
-        st.markdown("<h1 style='text-align:center;'>⛏️ MineCost v10.1</h1>", unsafe_allow_html=True)
-        st.info("Sistema Modular Cloud")
-        with st.form("login"):
-            u = st.text_input("Usuario")
-            p = st.text_input("Contraseña", type="password")
-            if st.form_submit_button("INGRESAR", type="primary"):
-                user = login_user(u, p)
-                if user:
-                    st.session_state['usuario'] = user['username']
-                    st.session_state['rol'] = user['rol']
-                    st.session_state['nombre'] = user['nombre_completo']
-                    st.rerun()
-                else:
-                    st.error("Credenciales incorrectas")
-else:
-    # SISTEMA DENTRO
-    with st.sidebar:
-        st.title(f"Hola, {st.session_state['nombre'].split()[0]}")
-        rol = st.session_state['rol']
+def main():
+    # Asegurar que existe el admin
+    check_admin_exists()
+    
+    # Inicializar estado de sesión
+    if 'authenticated' not in st.session_state:
+        st.session_state['authenticated'] = False
         
-        if rol == 'admin': st.success("🔑 ADMIN")
-        elif rol == 'digitador': st.info("✏️ DIGITADOR")
-        else: st.warning("👁️ LECTOR")
+    # --- LOGICA DE NAVEGACIÓN ---
+    
+    if not st.session_state['authenticated']:
+        # CASO A: NO ESTÁ LOGUEADO -> Muestra Login
+        # (Aquí es donde auth.py pondrá el título "Pukamani")
+        show_login_screen()
         
-        st.divider()
-        menu_opts = []
-        if rol in ['admin', 'digitador']: menu_opts.append("📝 Registro")
-        if rol in ['admin', 'lector', 'digitador']: menu_opts.append("📊 Dashboard")
-        if rol == 'admin': 
-            menu_opts.append("⚙️ Maestros")
-            menu_opts.append("👥 Usuarios")
+    else:
+        # CASO B: YA ENTRÓ AL SISTEMA -> Muestra Menú Lateral
+        with st.sidebar:
+            st.image("https://cdn-icons-png.flaticon.com/512/1048/1048950.png", width=100) # Icono minero opcional
+            st.title(f"Hola, {st.session_state.get('usuario', 'Minero')}")
+            st.write(f"Rol: **{st.session_state.get('rol', 'N/A')}**")
+            st.divider()
             
-        selection = st.radio("Menú", menu_opts)
-        st.divider()
-        if st.button("Cerrar Sesión"): logout()
+            menu = st.radio("Navegación", ["📊 Dashboard", "⚙️ Maestros", "👤 Usuarios"])
+            
+            st.divider()
+            if st.button("🔴 Cerrar Sesión"):
+                st.session_state['authenticated'] = False
+                st.rerun()
 
-    # ENRUTADOR DE MÓDULOS
-    if selection == "📝 Registro":
-        show_registro()
-    elif selection == "📊 Dashboard":
-        show_dashboard()
-    elif selection == "⚙️ Maestros":
-        show_maestros()
-    elif selection == "👥 Usuarios":
-        show_users_manager()
+        # Muestra la pantalla seleccionada
+        if menu == "📊 Dashboard":
+            show_dashboard()
+        elif menu == "⚙️ Maestros":
+            if st.session_state['rol'] == 'admin':
+                try:
+                    show_maestros()
+                except:
+                    st.warning("Módulo Maestros no cargado.")
+            else:
+                st.warning("⚠️ Acceso restringido a Administradores")
+        elif menu == "👤 Usuarios":
+            if st.session_state['rol'] == 'admin':
+                show_users_manager()
+            else:
+                st.warning("⚠️ Acceso restringido a Administradores")
+
+if __name__ == "__main__":
+    main()
