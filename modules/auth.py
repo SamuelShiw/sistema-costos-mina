@@ -33,9 +33,13 @@ def show_login_screen():
                 if user_data:
                     st.session_state['authenticated'] = True
                     st.session_state['usuario'] = user_data['username']
+                    # --- AGREGA ESTA LÍNEA NUEVA AQUÍ ABAJO: ---
+                    st.session_state['nombre'] = user_data['nombre_completo'] 
+                    # -------------------------------------------
                     st.session_state['rol'] = user_data['rol']
                     st.session_state['user_id'] = user_data['id']
-                    st.success(f"Bienvenido {user_data['nombre_completo']}")
+                    
+                    st.success(f"¡Bienvenido, {user_data['nombre_completo']}!")
                     time.sleep(1)
                     st.rerun()
                 else:
