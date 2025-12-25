@@ -3,7 +3,7 @@ import streamlit as st
 
 # 1. Configuración de la Página
 st.set_page_config(
-    page_title="Pukamani - Sistema Minero", 
+    page_title="💎 CORE - Sistema Minero", 
     page_icon="⛰️", 
     layout="wide"
 )
