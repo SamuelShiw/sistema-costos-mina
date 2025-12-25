@@ -131,7 +131,7 @@ def show_dashboard():
             st.download_button(
                 label="📊 Descargar Excel Pro",
                 data=excel_data,
-                file_name=f"Reporte_Pukamani_{datetime.now().strftime('%Y%m%d_%H%M')}.xlsx",
+                file_name=f"Reporte_CORE_{datetime.now().strftime('%Y%m%d_%H%M')}.xlsx",
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 key="btn_xls_down",
                 type="primary" # Botón resaltado

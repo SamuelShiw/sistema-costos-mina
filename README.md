@@ -81,4 +81,4 @@ sistema-costos-mina/
 👨‍💻 Autor
 Desarrollado por J. Samuel - Ingeniero de Software & Especialista en Minería .
 
-© 2025 Sistemas Pukamani. Todos los derechos reservados.
+© 2025 Sistemas CORE. Todos los derechos reservados.
