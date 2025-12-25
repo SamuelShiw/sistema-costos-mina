@@ -22,8 +22,8 @@ def login_user(user, password):
 def show_login_screen():
     col1, col2, col3 = st.columns([1,2,1])
     with col2:
-        st.markdown("<h1 style='text-align: center;'>⛰️ Pukamani</h1>", unsafe_allow_html=True)
-        st.markdown("<p style='text-align: center;'>Sistema de Control de Costos</p>", unsafe_allow_html=True)
+        st.markdown("<h1 style='text-align: center;'> C.O.R.E</h1>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: center;'>Control de Operaciones y Recursos</p>", unsafe_allow_html=True)
         st.divider()
         with st.form("login_form"):
             u = st.text_input("Usuario")
