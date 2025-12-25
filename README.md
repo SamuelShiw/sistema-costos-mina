@@ -1,48 +1,46 @@
-# ⛰️ Pukamani - Sistema de Control de Costos Mineros
+# 💎 CORE - Sistema de Control de Operaciones y Recursos
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue)
 ![Python](https://img.shields.io/badge/Python-3.11+-yellow)
-![Streamlit](https://img.shields.io/badge/Streamlit-1.28+-red)
+![Streamlit](https://img.shields.io/badge/Streamlit-1.30+-red)
 ![Status](https://img.shields.io/badge/Status-Production-green)
 
-> **Sistema integral para la gestión, estandarización y control de costos operativos en minería subterránea convencional.**
+> **Sistema integral para la gestión, trazabilidad y control de costos operativos (OPEX) en minería subterránea.**
 
 ---
 
 ## 📋 Descripción del Proyecto
 
-**Pukamani** (del quechua "Tierra Roja") es una solución tecnológica diseñada para modernizar el seguimiento financiero de las operaciones mineras. El sistema permite digitalizar el flujo de información de costos diarios, eliminando la dependencia de hojas de cálculo dispersas y centralizando la data en una base de datos segura en la nube.
+**CORE** (Control de Operaciones y Recursos) es una solución tecnológica desarrollada para optimizar el seguimiento financiero de las operaciones en la unidad minera **Pukamani**. 
 
-El objetivo principal es proporcionar a la Gerencia y Superintendencia visibilidad en tiempo real sobre el **OPEX**, permitiendo la toma de decisiones basada en datos.
+El sistema digitaliza el flujo de información diario, reemplazando las hojas de cálculo descentralizadas por una arquitectura en la nube. Su objetivo es eliminar la "ceguera operativa", proporcionando a la Gerencia y Superintendencia visibilidad en tiempo real sobre el gasto por labor y centro de costos.
 
 ## 🚀 Funcionalidades Principales
 
-* **🔐 Seguridad Robusta**: Sistema de autenticación encriptado (Bcrypt) con roles de usuario (Admin, Digitador, Lector).
-* **📊 Dashboard Ejecutivo**: Visualización de KPIs en tiempo real, distribución de costos por partida y análisis de tendencias.
-* **📝 Registro Diario**: Interfaz optimizada para la carga de datos operativos (Mano de obra, suministros, servicios).
-* **☁️ Base de Datos Cloud**: Persistencia de datos en PostgreSQL (vía Supabase) con backups automáticos.
-* **📥 Reportería**: Exportación automatizada de reportes en formato Excel compatible con ERPs.
+* **🔐 Seguridad Robusta**: Roles diferenciados (Admin, Digitador, Lector) con encriptación de claves.
+* **📊 Dashboard Ejecutivo**: KPIs en tiempo real, pareto de costos y curvas de avance vs. gasto.
+* **📝 Registro Validado**: Interfaz que impide errores de tipeo en labores e insumos.
+* **📥 Reportes Corporativos**: Generación automática de Excel con Tablas Dinámicas y gráficos listos para Finanzas.
+* **☁️ Base de Datos Cloud**: Arquitectura SQL (Supabase) inmutable y segura.
 
 ## 🛠️ Tecnologías Utilizadas
 
-Este proyecto ha sido construido utilizando un stack moderno y eficiente:
+Proyecto construido bajo estándares modernos de Ingeniería de Software:
 
-* **Frontend/Backend**: [Streamlit](https://streamlit.io/) (Framework de Python para Data Apps).
-* **Base de Datos**: [Supabase](https://supabase.com/) (PostgreSQL).
-* **Análisis de Datos**: Pandas & NumPy.
-* **Visualización**: Altair & Plotly.
-* **Seguridad**: Hasheo de contraseñas con Bcrypt.
+* **Frontend**: [Streamlit](https://streamlit.io/) (UI reactiva).
+* **Backend/DB**: [Supabase](https://supabase.com/) (PostgreSQL).
+* **Data Processing**: Pandas & NumPy.
+* **Reportes**: OpenPyXL (Motor de generación de Excel).
+* **Visualización**: Altair Charts.
 
 ---
 
-## ⚙️ Instalación y Despliegue Local
+## ⚙️ Instalación Local (Para Desarrolladores)
 
-Si deseas correr este proyecto en tu entorno local, sigue estos pasos:
-
-### 1. Clonar el repositorio
-```bash
-git clone [https://github.com/SamuelShiw/sistema-costos-mina.git](https://github.com/SamuelShiw/sistema-costos-mina.git)
-cd sistema-costos-mina
+1. **Clonar el repositorio**
+   ```bash
+   git clone [https://github.com/SamuelShiw/sistema-costos-mina.git](https://github.com/SamuelShiw/sistema-costos-mina.git)
+   cd sistema-costos-mina
 
 2. Crear entorno virtual
 python -m venv venv
