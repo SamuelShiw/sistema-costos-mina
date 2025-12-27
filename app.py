@@ -66,7 +66,7 @@ def main():
         elif menu == "📝 Registros":
             show_registro()
             
-        elif menu == "⚙️ Maestros":
+        elif menu == "⚙️ Parámetros":
             show_maestros()
             
         elif menu == "👤 Usuarios":
