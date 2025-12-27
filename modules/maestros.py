@@ -32,7 +32,7 @@ def obtener_datos_yahoo():
         return None, None
 
 def show_maestros():
-    st.title("⚙️ Maestro de Configuración")
+    st.title("⚙️ Parámetros del Sistema")
 
     # --- NOTIFICACIONES (TOAST) ---
     if 'mensaje_exito' in st.session_state:
