@@ -80,7 +80,7 @@ def show_maestros():
     st.divider()
 
     # --- GESTIÓN DE INSUMOS ---
-    st.subheader("1. Maestro de Insumos")
+    st.subheader("1. Parámetros de Insumos")
     
     data = run_query("SELECT id, nombre, unidad, precio, categoria, activo FROM insumos ORDER BY categoria, nombre")
     df_ins = pd.DataFrame(data) if data else pd.DataFrame(columns=['id', 'nombre', 'unidad', 'precio', 'categoria', 'activo'])
@@ -134,7 +134,7 @@ def show_maestros():
     st.divider()
 
     # --- GESTIÓN DE LABORES ---
-    st.subheader("2. Maestro de Labores")
+    st.subheader("2. Parámetros de Labores")
     col_tab, col_form = st.columns([1, 1])
     with col_tab:
         df_frentes = pd.DataFrame(run_query("SELECT codigo, tipo, estado, zona FROM frentes ORDER BY codigo"))
