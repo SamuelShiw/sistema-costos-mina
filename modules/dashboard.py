@@ -2,13 +2,21 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
-from datetime import datetime
+from datetime import datetime, time  # <-- AGREGADO: 'time' para manejar la hora final
 from database import run_query
 # Importamos el módulo de reportes que creaste
 from modules.reportes import generar_excel_corporativo
 
 def show_dashboard():
-    st.title("💎 CORE - Control de Costos")
+    # --- CAMBIO 1: Botón de actualización manual ---
+    col_head, col_btn = st.columns([8,2])
+    with col_head:
+        st.title("💎 CORE - Control de Costos")
+    with col_btn:
+        if st.button("🔄 Actualizar Data"):
+            st.cache_data.clear()
+            st.rerun()
+    # ---------------------------------------------
     
     # 1. Configuración y Filtros
     res = run_query("SELECT valor FROM configuracion WHERE clave='DOLAR_CAMBIO'")
@@ -37,7 +45,13 @@ def show_dashboard():
         FROM costos c
         WHERE c.fecha BETWEEN %s AND %s
     """
-    params = [fi, ff]
+    
+    # --- CAMBIO 2: Ajuste de fecha final para incluir todo el día ---
+    # Combinamos la fecha seleccionada con la hora 23:59:59
+    ff_full = datetime.combine(ff, time(23, 59, 59))
+    
+    params = [fi, ff_full] # Usamos ff_full en lugar de ff
+    # -------------------------------------------------------------
     
     if f_lab != "TODOS":
         query += " AND c.labor = %s"
