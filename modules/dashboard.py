@@ -2,13 +2,13 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
-from datetime import datetime, time  # <-- AGREGADO: 'time' para manejar la hora final
+from datetime import datetime, time  # <-- 'time' es vital para el cierre del día
 from database import run_query
-# Importamos el módulo de reportes que creaste
+# Importamos el módulo de reportes
 from modules.reportes import generar_excel_corporativo
 
 def show_dashboard():
-    # --- CAMBIO 1: Botón de actualización manual ---
+    # --- CABECERA Y BOTÓN DE ACTUALIZACIÓN ---
     col_head, col_btn = st.columns([8,2])
     with col_head:
         st.title("💎 CORE - Control de Costos")
@@ -27,12 +27,24 @@ def show_dashboard():
         fi = c1.date_input("Desde", value=datetime.today().replace(day=1))
         ff = c2.date_input("Hasta", value=datetime.today())
         
-        # Intentamos cargar lista de labores, si falla, lista vacía
+        # --- CORRECCIÓN DE FILTRO DE LABOR ---
+        # Antes buscabas en 'labores' (nombres), ahora buscamos en 'frentes' (códigos)
+        # para que coincida con lo que guarda el registro.py
         try:
-            labs_data = run_query("SELECT nombre FROM labores WHERE estado=true")
-            labs = [x['nombre'] for x in labs_data] if labs_data else []
+            # A) Traemos los frentes activos
+            labs_data = run_query("SELECT codigo FROM frentes WHERE estado='ACTIVO' ORDER BY codigo")
+            labs = [x['codigo'] for x in labs_data] if labs_data else []
+            
+            # B) TRUCO: Traemos también cualquier labor que ya tenga costos registrados
+            # (Esto sirve por si hay datos viejos o frentes desactivados que tienen historia)
+            labs_existentes = run_query("SELECT DISTINCT labor FROM costos")
+            if labs_existentes:
+                lista_existentes = [x['labor'] for x in labs_existentes if x['labor']]
+                # Unimos las dos listas y quitamos duplicados
+                labs = sorted(list(set(labs + lista_existentes)))
         except:
             labs = []
+        # -------------------------------------
             
         f_lab = c3.selectbox("Labor", ["TODOS"] + labs)
         f_gua = c4.selectbox("Guardia", ["TODOS", "Día", "Noche"])
@@ -46,12 +58,10 @@ def show_dashboard():
         WHERE c.fecha BETWEEN %s AND %s
     """
     
-    # --- CAMBIO 2: Ajuste de fecha final para incluir todo el día ---
-    # Combinamos la fecha seleccionada con la hora 23:59:59
+    # Ajuste de fecha final para incluir todo el día (hasta las 23:59:59)
     ff_full = datetime.combine(ff, time(23, 59, 59))
     
-    params = [fi, ff_full] # Usamos ff_full en lugar de ff
-    # -------------------------------------------------------------
+    params = [fi, ff_full]
     
     if f_lab != "TODOS":
         query += " AND c.labor = %s"
@@ -64,7 +74,7 @@ def show_dashboard():
     df = pd.DataFrame(data)
     
     if df.empty:
-        st.warning("📭 No hay datos registrados en este rango de fechas.")
+        st.warning("📭 No hay datos registrados en este rango de fechas y filtros.")
         return # Se detiene aquí si no hay datos
 
     # 3. Procesamiento de Datos (Limpieza)
@@ -83,7 +93,7 @@ def show_dashboard():
         'precio_total': 'sum'
     }).reset_index()
     
-    # 4. KPIs y Gráficos (Tu código visual)
+    # 4. KPIs y Gráficos
     k1, k2, k3, k4 = st.columns(4)
     k1.metric("Gasto Total (S/)", f"S/ {total_pen:,.0f}")
     k2.metric("Equiv. Dólares ($)", f"$ {total_pen/dolar:,.0f}")
@@ -109,16 +119,16 @@ def show_dashboard():
             tooltip=['labor', 'precio_total']
         ), use_container_width=True)
 
-    # 5. SECCIÓN DE EXPORTACIÓN (Aquí están los 2 Botones)
+    # 5. SECCIÓN DE EXPORTACIÓN
     st.divider()
     st.subheader("📥 Exportación de Reportes")
     
     col_btn_csv, col_btn_xls = st.columns(2)
     
-    # --- BOTÓN 1: CSV BÁSICO (Siempre funciona) ---
+    # --- BOTÓN 1: CSV BÁSICO ---
     with col_btn_csv:
         st.info("📊 **Formato Básico (CSV)**")
-        st.caption("Texto plano separado por comas. Ideal para importar rápido a otros sistemas.")
+        st.caption("Texto plano separado por comas.")
         
         csv_data = df.to_csv(index=False).encode('utf-8')
         st.download_button(
@@ -129,17 +139,15 @@ def show_dashboard():
             key="btn_csv_down"
         )
 
-    # --- BOTÓN 2: EXCEL PREMIUM (Tu nuevo código) ---
+    # --- BOTÓN 2: EXCEL PREMIUM ---
     with col_btn_xls:
         st.success("📈 **Formato Gerencial (Excel)**")
-        st.caption("Incluye formatos, colores, tablas dinámicas y gráficos. Listo para imprimir.")
+        st.caption("Incluye formatos, colores y tablas dinámicas.")
         
-        # Generamos el Excel en memoria
         try:
             usuario = st.session_state.get('usuario', 'Admin')
             rol = st.session_state.get('rol', 'Lector')
             
-            # Llamamos a tu función de modules/reportes.py
             excel_data = generar_excel_corporativo(df, df_agrupado, usuario, rol)
             
             st.download_button(
@@ -148,10 +156,8 @@ def show_dashboard():
                 file_name=f"Reporte_CORE_{datetime.now().strftime('%Y%m%d_%H%M')}.xlsx",
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 key="btn_xls_down",
-                type="primary" # Botón resaltado
+                type="primary"
             )
         except Exception as e:
             st.error(f"⚠️ Error generando Excel: {e}")
             st.warning("Verifica que hayas subido el archivo modules/reportes.py")
-
-    #Prueba de error 123... 
