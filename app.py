@@ -46,7 +46,7 @@ def main():
             
             if rol == 'admin':
                 # EL ADMIN AHORA TIENE ACCESO A TODO
-                opciones = ["📊 Dashboard", "📝 Registros", "⚙️ Maestros", "👤 Usuarios"]
+                opciones = ["📊 Dashboard", "📝 Registros", "⚙️ Parámetros", "👤 Usuarios"]
             elif rol == 'digitador':
                 opciones = ["📝 Registros", "📊 Dashboard"]
             else:
