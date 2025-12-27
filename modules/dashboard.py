@@ -153,3 +153,5 @@ def show_dashboard():
         except Exception as e:
             st.error(f"⚠️ Error generando Excel: {e}")
             st.warning("Verifica que hayas subido el archivo modules/reportes.py")
+
+    #Prueba de error 123... 
